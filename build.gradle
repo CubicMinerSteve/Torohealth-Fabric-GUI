@@ -1,0 +1,116 @@
+plugins {
+	id 'net.fabricmc.fabric-loom-remap' version '1.14-SNAPSHOT'
+	id 'maven-publish'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+	archivesName = project.archives_base_name
+}
+
+repositories {
+	// Add repositories to retrieve artifacts from in here.
+	// You should only use this when depending on other mods because
+	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
+	// for more information about repositories.
+	maven {
+		name = "Cloth Config"
+		url = "https://maven.shedaniel.me/"
+	}
+	maven {
+		name = "Mod Menu"
+        url = "https://maven.terraformersmc.com/releases/"
+		content {
+			includeGroup "com.terraformersmc"
+		}
+    }
+}
+
+dependencies {
+	// To change the versions see the gradle.properties file
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings loom.officialMojangMappings()
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+	// Fabric API. This is technically optional, but you probably want it anyway.
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+	
+	// Cloth Config
+	modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
+		exclude group: "net.fabricmc.fabric-api"
+	}
+	include "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
+
+	// Mod Menu Integration
+	modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}") {
+		exclude group: "net.fabricmc.fabric-api"
+	}
+}
+
+processResources {
+	def expandProps = [
+			"version": project.version,
+			"maven_group": project.group,
+			"minecraft_version": project.minecraft_version,
+			"fabric_loader_version": project.loader_version,
+			"fabric_api_version": project.fabric_api_version,
+			"modmenu_version": project.modmenu_version
+	]
+
+	filesMatching(['fabric.mod.json']) {
+		expand expandProps
+	}
+	inputs.properties(expandProps)
+}
+
+loom {
+
+}
+
+// Ensure that the encoding is set to UTF-8, no matter what the system default is
+// This fixes some edge cases with special characters not displaying correctly
+// See http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
+tasks.withType(JavaCompile).configureEach {
+	options.encoding = "UTF-8"
+	it.options.release = 21
+}
+
+java {
+	withSourcesJar()
+
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
+}
+
+jar {
+	from("LICENSE") {
+		rename {
+			"${it}_${project.base.archivesName.get()}"
+		}
+	}
+}
+
+// Configure the maven publication
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			// add all the jars that should be included when publishing to maven
+			artifact(remapJar) {
+				builtBy remapJar
+			}
+			artifact(sourcesJar) {
+				builtBy remapSourcesJar
+			}
+		}
+	}
+
+	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+	// Select the repositories you want to publish to
+	repositories {
+		// Uncomment to publish to the local maven
+		// mavenLocal()
+	}
+}
