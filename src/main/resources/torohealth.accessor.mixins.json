@@ -1,0 +1,14 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "net.torocraft.torohealth.mixin.accessor",
+	"compatibilityLevel": "JAVA_25",
+	"mixins": [],
+	"client": [
+		"AttributeInstanceAccessor"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"refmap": "torohealth-refmap.json"
+}
