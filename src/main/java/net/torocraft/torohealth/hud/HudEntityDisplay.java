@@ -19,6 +19,7 @@ import net.minecraft.world.entity.animal.chicken.Chicken;
 import net.minecraft.world.entity.animal.dolphin.Dolphin;
 import net.minecraft.world.entity.animal.equine.AbstractHorse;
 import net.minecraft.world.entity.animal.golem.CopperGolem;
+import net.minecraft.world.entity.animal.rabbit.Rabbit;
 import net.minecraft.world.entity.monster.Guardian;
 import net.minecraft.world.entity.monster.Silverfish;
 import net.minecraft.world.entity.monster.Vex;
@@ -45,20 +46,26 @@ public class HudEntityDisplay {
 
 		int scaleY = Mth.ceil(TRANSFORM_HEIGHT / entity.getBbHeight());
 		int scaleX = Mth.ceil(TRANSFORM_WIDTH / entity.getBbWidth());
-		entitySize = Math.min(scaleX, scaleY);
 
+		entitySize = Math.min(scaleX, scaleY);
 		entityBlockOffset = new Vector3f(0.0F, entity.getBbHeight() / 2, 0.0F);
+
 		if (entity instanceof Chicken || entity instanceof CopperGolem || entity instanceof Silverfish) {
-			entitySize *= 0.7;
-			entityBlockOffset.add(0.0F, entity.getBbHeight() / 4.0F, 0.0F);
-		} else if (entity instanceof AbstractHorse) {
-			entityBlockOffset.add(-entity.getBbWidth() / 8.0F, entity.getBbHeight() / 16.0F, 0.0F);
-		} else if (entity instanceof Villager && entity.isSleeping()) {
-			entitySize = entity.isBaby() ? 31 : 16;
+			entitySize *= 0.7F;
+			entityBlockOffset.add(0.0F, entity.getBbHeight() * 0.25F, 0.0F);
+		} else if (entity instanceof Rabbit rabbit) {
+			entitySize *= rabbit.isBaby() ? 0.5F : 0.7F;
+			entityBlockOffset.add(0.0F, rabbit.getBbHeight() * 0.25F, 0.0F);
+		} else if (entity instanceof AbstractHorse horse) {
+			entityBlockOffset.add(-horse.getBbWidth() * 0.125F, horse.getBbHeight() * 0.0625F, 0.0F);
+		} else if (entity instanceof Villager) {
+			if (entity.isSleeping()) {
+				entitySize = entity.isBaby() ? 31 : 16;
+			}
 		} else if (entity instanceof Guardian || entity instanceof Dolphin) {
 			entityBlockOffset.add(entity.getBbWidth() / 8.0F, 0.0F, 0.0F);
 		} else if (entity instanceof Allay || entity instanceof Vex || entity instanceof Bat) {
-			entitySize *= 0.8;
+			entitySize *= 0.8F;
 		}
 	}
 
