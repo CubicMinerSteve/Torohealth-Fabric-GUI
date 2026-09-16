@@ -1,13 +1,9 @@
-# ToroHealth Damage Indicators
+# Fabric Example Mod
 
-With ToroHealth Damage Indicators, damage given, received, or mitigated will be displayed as a number that pops off of the entity.
+## Setup
 
-Also, health bars will appear for the entity in the player's crosshairs.
+For setup instructions please see the [fabric documentation page](https://docs.fabricmc.net/develop/getting-started/setting-up-a-development-environment) that relates to the IDE that you are using.
 
-Customization options are available for changing the color of the damage numbers and the display style of the health bar (Compact or Standard).
+## License
 
-**I have added a configuration GUI screen for this GUI version. To open it, you need to bind one key in control settings. You can change and save config in the GUI or edit the config file. The change you make will instantly apply.**
-
-### [Download from Releases] ->
-
-![Screenshot](https://i.imgur.com/C9oBhZ5.png)
+This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
